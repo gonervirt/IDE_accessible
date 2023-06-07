@@ -6,6 +6,7 @@ import wx
 import Panels.Device_tree as Tree
 from Panels.Notebook import NotebookPanel
 from Panels.Shell import ShellPanel
+import console
 
 
 def create_panels(frame):
@@ -22,6 +23,7 @@ def create_panels(frame):
     frame.notebook = NotebookPanel(frame.splitter_h, frame)
     frame.device_tree = Tree.DeviceTree(frame.splitter_v, frame)
     frame.shell = ShellPanel(frame.splitter_h, frame)
+    #frame.shell = console.ConsoleFrame(frame,'Python Console')
     frame.splitter_v.SplitVertically(frame.device_tree, frame.splitter_h, 200)
     frame.splitter_h.SplitHorizontally(frame.notebook, frame.shell, 400)
     frame.splitter_h.SetMinimumPaneSize(20)

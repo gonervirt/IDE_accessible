@@ -5,7 +5,7 @@ import keyword
 import wx
 import wx.stc as stc
 import wx.py as pysh
-from editor_style import customize_editor, init_editor_style
+from Editor_Style import customize_editor, init_editor_style
 from Utils.find_replace import find_next, replace
 
 

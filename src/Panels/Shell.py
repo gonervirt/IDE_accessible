@@ -20,6 +20,8 @@ class ShellPanel(wx.TextCtrl):
                              style=wx.TE_MULTILINE |
                              wx.TE_READONLY | wx.TE_RICH)
         self.__set_properties__(frame)
+        self.command_history = []
+        self.current_command_index = -1
 
     def __set_properties__(self, frame):
         """ Method to define new attributes and set style
@@ -75,6 +77,45 @@ class ShellPanel(wx.TextCtrl):
     def remove_char(self):
         """ Remove the previous character
         """
-
+        print ("hremove")
         cursor = self.GetInsertionPoint()
         self.Remove(cursor - 1, cursor)
+    
+    def move_key_up(self):
+        """ Move the cursor on the next character
+        """
+        print ("upuouo")
+        
+    def move_key_down(self):
+        """ Move the cursor on the next character
+        """
+        print ("down")
+        
+    def on_key_down(self, event):
+        print ("hhhhhhhhhhhhhhhhhhhhh")
+        keycode = event.GetKeyCode()
+
+        if keycode == wx.WXK_RETURN:
+            command = self.text_ctrl.GetValue()
+            self.command_history.append(command)
+            self.current_command_index = -1  # Reset command index
+
+            # Execute the command (you can implement your own command execution logic)
+            self.execute_command(command)
+
+            self.text_ctrl.SetValue('')  # Clear the input field
+
+        elif keycode == wx.WXK_UP:
+            if self.current_command_index < len(self.command_history) - 1:
+                self.current_command_index += 1
+                self.text_ctrl.SetValue(self.command_history[self.current_command_index])
+
+        elif keycode == wx.WXK_DOWN:
+            if self.current_command_index >= 0:
+                self.current_command_index -= 1
+                if self.current_command_index == -1:
+                    self.text_ctrl.SetValue('')
+                else:
+                    self.text_ctrl.SetValue(self.command_history[self.current_command_index])
+
+        event.Skip()

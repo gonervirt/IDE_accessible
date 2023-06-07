@@ -7,7 +7,7 @@ import threading
 import pyttsx3
 import sys
 
-from shortcuts import InitShortcuts
+from Shortcuts import InitShortcuts
 from Serial_manager.firmware import FirmwareManager
 from Serial_manager.connexion import ManageConnection
 from menus import init_top_menu, init_toolbar
@@ -34,6 +34,8 @@ class MainWindow(wx.Frame):
         """
         wx.Frame.__init__(self, None, 1, title=name, size=size)
         self.SetIcon(wx.Icon("./img/Icone.png"))
+        #cree la fenetre au centre de l'ecran
+        self.Centre()
         self.FromDIP(size)
         self.__set_properties__()
         create_panels(self)
@@ -247,7 +249,8 @@ class MyApp(wx.App):
             --if True the app works
         """
         wx.InitAllImageHandlers()
-        window = MainWindow("IDE Accessible MHK V 1.0", (800, 600))
+        windows_size=(800, 600)
+        window = MainWindow("IDE Accessible MHK V 1.0", windows_size)
         self.SetTopWindow(window)
         window.Show()
         return True

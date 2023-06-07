@@ -6,7 +6,7 @@ import wx
 import json
 import wx.stc as stc
 
-from constantes import stc_style, py_style
+from Constantes import stc_style, py_style
 
 
 def change_theme_choice(frame, theme_name):

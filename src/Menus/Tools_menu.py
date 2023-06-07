@@ -6,8 +6,8 @@ import wx
 import time
 from Panels import wxSerialConfigDialog
 from Serial_manager.firmware import burn_firmware
-from editor_style import change_theme_choice, customize_editor
-from editor_style import activate_highlighted_syntax
+from Editor_Style import change_theme_choice, customize_editor
+from Editor_Style import activate_highlighted_syntax
 from Utils.voice_synthese import my_speak
 from Serial_manager.send_infos import put_cmd
 from Serial_manager.connexion import ConnectSerial
