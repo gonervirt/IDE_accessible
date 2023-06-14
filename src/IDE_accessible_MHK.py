@@ -249,15 +249,25 @@ class MyApp(wx.App):
             --if True the app works
         """
         wx.InitAllImageHandlers()
-        windows_size=(800, 600)
-        window = MainWindow("IDE Accessible MHK V 1.0", windows_size)
+        # get screen siez
+        window_factor = 0.75
+        display = wx.Display()
+        display_size = display.GetGeometry().GetSize()
+        width = int(window_factor*display_size[0])
+        height = int(window_factor * display_size[1]) 
+        
+        # init window size 
+        # window_size=(800, 600)
+        window_size=(width, height)
+        
+        window = MainWindow("IDE Accessible MHK V 1.0", window_size)
         self.SetTopWindow(window)
         window.Show()
         return True
 
 
 if __name__ == "__main__":
-    sys.stdout = sys.__stdout__
+    # sys.stdout = sys.__stdout__
     app = MyApp()
     app.MainLoop()
     print("Exit App")
