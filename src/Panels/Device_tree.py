@@ -88,6 +88,14 @@ class DeviceTree(wx.TreeCtrl):
 
     def fill_section(self, item, path):
         """Manage the creation of the treeview item selected (recursive)
+        
+        this method reads the content of a directory to add some common ressources in the Device tree panel 
+        (on left size of the main window)
+        
+        this method is used to fill the file tree with :
+        * common files ressources
+        * board example files 
+        * workspace tiles 
 
         :param section: section to build
         :type section: wx.TreeItem
@@ -95,7 +103,10 @@ class DeviceTree(wx.TreeCtrl):
         :type path: str
         """
 
-        for element in os.listdir(path):
+        # FLB => ajout print
+        print("Device tree => appel : fill_section method ")
+        print("chemin : ", path)
+        for element in os.listdir(path):  
             if os.path.isdir(os.path.join(path, element)):
                 child = self.AppendItem(item, element)
                 self.SetItemImage(child, self.fldridx, wx.TreeItemIcon_Normal)
@@ -221,6 +232,9 @@ class DeviceTree(wx.TreeCtrl):
         self.frame.show_cmd = True
 
     def open_file_on_card(self):
+        """opens file on connected device.
+        
+        """ 
         size = self.init_open_on_card()
         cmd = "print(impossible.read())\r\n"
         start_time = time.time()
@@ -230,7 +244,7 @@ class DeviceTree(wx.TreeCtrl):
         else:
             while (len(self.frame.open_file_txt) - len(cmd) - 1) < int(size) and end_time < 10:
                 end_time = time.time() - start_time
-            print("Size_opened:", len(self.frame.open_file_txt))
+            print("Size_opened : ", len(self.frame.open_file_txt))
             if end_time >= 10:
                 self.frame.shell.AppendText("Can't Open file")
                 self.frame.open_file = False
@@ -246,8 +260,15 @@ class DeviceTree(wx.TreeCtrl):
         return res
 
     def init_open_on_card(self):
+        """  ??? 
+    
+        """ 
+        print("Device tree - init_open_on_card method. ") 
+        
         self.frame.exec_cmd("\r\n")
         self.frame.show_cmd = False
+        # FLB => stat info
+        print("get Stat info ") 
         self.frame.exec_cmd("info = os.stat('%s')\r\n" % self.path)
         size = self.frame.exec_cmd("print(info[6])\r\n")
         self.frame.exec_cmd("del info\r\n")
@@ -278,7 +299,8 @@ class DeviceTree(wx.TreeCtrl):
                     tab['Workspace Path'] = path
                     file.write(json.dumps(tab, indent=4))
             except Exception as e:
-                print("Error :", e)
+                print("Error open customize.json file.") 
+                print(e)
 
     def OnClipboardMenu(self, evt):
         """
@@ -525,10 +547,20 @@ def setDefaultProg(frame, filename):
 def getFileTree(frame, dir):
     """
         Get the TreeView structure (recursive way)
+        
+        this method is used on the connected Board 
+        it reads the files and directories list available in the memory. 
+        
     """
 
     frame.cmd_return = ""
     frame.exec_cmd("\r\n")
+    
+    # FLB => ajout print directory 
+    print("Devide tree - getFileTree method ") 
+    print("exec cmd : ", os.listdir ) 
+    print("directory : ", dir) 
+    print("(\'%s\')\r\n" % dir) 
     result = frame.exec_cmd("os.listdir(\'%s\')\r\n" % dir)
     if result == "err":
         return result
@@ -582,7 +614,14 @@ def treeModel(frame):
     frame.device_tree.DeleteChildren(frame.device_tree.device)
     frame.device_tree.DeleteChildren(frame.device_tree.librairies)
     res = json.loads("{}")
-    res = getFileTree(frame, ".")
+    # FLB => ajout print
+    print("Device_tree - method treeModel - call for getFileTree board ?") 
+    # si file_tree_dir = "/" on voit bien dans le resultat 
+    # flash et sc card mais ça plante plus loin dans le code
+    # au moement de l'envoi de la commande os.stat(file_tree_dir) 
+    file_tree_dir = "." 
+    print("Diectory : ", file_tree_dir) 
+    res = getFileTree(frame, file_tree_dir)
 
     if res == "err":
         frame.cmd_return = ""
