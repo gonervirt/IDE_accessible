@@ -1,11 +1,22 @@
 """
     Main of the application wich contains the classes to init the app
 """
+
+__version__ = "v2.0" 
+__release_date__ = "2023-06-25" 
+__author__ = "My Human Kit in collaboration with Atelier partagé"
+
+import os
+
+# reglage du backend
+os.environ["MPLBACKEND"] = "WXAgg"
+
+import sys
+
 import wx
 import serial
 import threading
 import pyttsx3
-import sys
 
 from Shortcuts import InitShortcuts
 from Serial_manager.firmware import FirmwareManager
@@ -18,8 +29,26 @@ from Utils.voice_synthese import my_speak
 
 
 class MainWindow(wx.Frame):
-    """MainWindow of the app which will contains all the children classes and
+    """classe MainWindow 
+    
+    MainWindow of the app which will contains all the children classes and
        custom functions
+       
+       this class contains methods :
+       * __init__ : init class constructor 
+       * __set_properties__ : 
+       * __attach_events : 
+       * exec_cmd : to execute command on connected board on a dedicated thread
+       * start_thread_serial : 
+       * stop_thread_serial :
+       * OnKey :
+       * thread_listen_port : 
+       * actualize_status_bar :
+       * OnUpFocus :
+       * OnDownFocus : 
+       * OnStatus : sets focus on status bar
+       * right_click_shortcut :
+       * 
 
     :param wx.Frame: see https://wxpython.org/Phoenix/docs/html/wx.Frame.html
     """
@@ -33,13 +62,26 @@ class MainWindow(wx.Frame):
         :type size: tuple(int, int)
         """
         wx.Frame.__init__(self, None, 1, title=name, size=size)
+        dir_icon = os.path.dirname("./img/Icone.png")
+        print("DIR icon : ", dir_icon) 
         self.SetIcon(wx.Icon("./img/Icone.png"))
+        
+        print("Creation de la fenetre de l'application au centre de l'ecran") 
         #cree la fenetre au centre de l'ecran
         self.Centre()
         self.FromDIP(size)
         self.__set_properties__()
+        
+        # create panel
+        print("create panel") 
         create_panels(self)
+        
+        # init tool bar 
+        print("init tool bar") 
         init_toolbar(self)
+        
+        # init short cuts
+        print("init short cuts") 
         InitShortcuts(self)
         self.__attach_events()
 
@@ -82,13 +124,15 @@ class MainWindow(wx.Frame):
 
     def exec_cmd(self, cmd):
         """Execute a command on the device and get the command back
+        
+        command execution id performed in a dedicated Thread 
 
         :param cmd: command to execute
         :type cmd: str
         :return: command back
         :rtype: str
         """
-        print("Commande sent ==>", cmd)
+        print("Exec cmd ==>", cmd)
         self.read_thread = Exec_cmd(cmd, self)
         self.read_thread.start()
         self.read_thread.join()
@@ -99,7 +143,9 @@ class MainWindow(wx.Frame):
         return self.result
 
     def start_thread_serial(self):
-        """Start the receiver thread"""
+        """Start the receiver thread
+        
+        """
         self.thread_serial = threading.Thread(target=self.thread_listen_port)
         self.alive.set()
         self.thread_serial.start()
@@ -108,34 +154,46 @@ class MainWindow(wx.Frame):
         self.read_thread = None
 
     def stop_thread_serial(self):
-        """Stop the receiver thread, wait until it's finished."""
+        """Stop the receiver thread, wait until it's finished.
+        
+        """
         if self.thread_serial is not None:
             self.alive.clear()          # clear alive event for thread
-            self.thread_serial.join()          # wait until thread has finished
+            self.thread_serial.join()   # wait until thread has finished
             self.thread_serial = None
 
     def OnKey(self, evt):
         """
-        Key event handler. If the key is in the ASCII range, write it to the
-        serial port. Newline handling is also done here.
+        Key event handler. 
+        
+        If the key is in the ASCII range, write it to the
+        serial port of the micropython board. 
+        
+        this method manages key pressed in text control console
+           * Newline handling is also done here.
+           * left arrow
+           * right arrow
+           * Backspace key 
+           
         """
         code = evt.GetUnicodeKey()
         if code < 256:
             code = evt.GetKeyCode()
         if code == 13:  # is it a newline?
-            self.serial.write(b'\n')
+            self.serial.write(b'\n') # send new line ton serial port 
             self.on_key = False   # send LF
-        if code == 314:
-            self.keypressmsg = "\x1b\x5b\x44"
-            self.serial.write(b'\x1b\x5b\x44')
+        # if code == 314: # left key 
+        if code == wx.WXK_LEFT:
+            self.keypressmsg = "\x1b\x5b\x44" # touche  fleche gauche 
+            self.serial.write(b'\x1b\x5b\x44') # touche  fleche gauche 
             return
         if code == wx.WXK_RIGHT:
-            self.keypressmsg = "\x1b\x5b\x43"
-            self.serial.write(b'\x1b\x5b\x43')
+            self.keypressmsg = "\x1b\x5b\x43" # touche flèche droite 
+            self.serial.write(b'\x1b\x5b\x43') # touche flèche droite 
             return
         if code == 8:
-            self.keypressmsg = "\x08"
-            self.serial.write(b'\x08')
+            self.keypressmsg = "\x08"   # touche Backspace  
+            self.serial.write(b'\x08') # touche Backspace  
             return
         else:
             self.keypressmsg = "else"
@@ -145,15 +203,17 @@ class MainWindow(wx.Frame):
 
     def thread_listen_port(self):
         """
-        Thread that handles the incoming traffic. Does the basic input
+        Thread that handles the incoming traffic. 
+        Does the basic input
         transformation (newlines) and call an serial_read_data
         """
-        while self.alive.isSet():
+        while self.alive.is_set():
             try:
                 b = self.serial.read(self.serial.in_waiting)
                 self.is_data = False
             except Exception as e:
                 my_speak(self, "Device Disconnected")
+                print("ERROR : Device disconnected.") 
                 print("Error: ", e)
                 self.alive.clear()
                 self.top_menu.MenuTools.OnDisconnect(None)
@@ -163,6 +223,7 @@ class MainWindow(wx.Frame):
                 if not self.open_file:
                     serial_read_data(self, b)
                 else:
+                    print("self.open_file_txt : serial.in_waiting ??? ") 
                     self.open_file_txt += b.decode('utf-8', "ignore")
 
     def actualize_status_bar(self):
@@ -233,6 +294,7 @@ class MainWindow(wx.Frame):
         if self.device_tree.HasFocus():
             self.device_tree.OnClipboardMenu(None)
 
+    # FLB => ajout short cut alt + F4 (?) 
 
 class MyApp(wx.App):
     """Minimal class to launch the app
@@ -260,6 +322,7 @@ class MyApp(wx.App):
         # window_size=(800, 600)
         window_size=(width, height)
         
+        # fenetre principale de l'application 
         window = MainWindow("IDE Accessible MHK V 1.0", window_size)
         self.SetTopWindow(window)
         window.Show()
@@ -267,7 +330,8 @@ class MyApp(wx.App):
 
 
 if __name__ == "__main__":
-    # sys.stdout = sys.__stdout__
+    # réorientation de la sortie 
+    sys.stdout = sys.__stdout__
     app = MyApp()
     app.MainLoop()
     print("Exit App")

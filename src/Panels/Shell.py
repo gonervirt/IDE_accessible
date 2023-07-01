@@ -1,4 +1,6 @@
 """ Module wich contain classes related to the Shell Panel
+
+this module is used to generate the micropython console included the global GUI
 """
 
 import wx
@@ -16,10 +18,16 @@ class ShellPanel(wx.TextCtrl):
         """ Constructor method
          """
 
-        wx.TextCtrl.__init__(self, parent=parent,
+        # create text console
+        text_console = wx.TextCtrl.__init__(self, parent=parent,
                              style=wx.TE_MULTILINE |
                              wx.TE_READONLY | wx.TE_RICH)
         self.__set_properties__(frame)
+        
+        # initialisation du texte dans la console à l'ouverture
+        # text_console.SetValue("Micropython console") 
+        
+        # création d'un buffer d'historique de commandes
         self.command_history = []
         self.current_command_index = -1
 
@@ -44,7 +52,7 @@ class ShellPanel(wx.TextCtrl):
             theme = json.load(file)
             file.close()
             theme = theme[theme_choice]
-            self.font = wx.Font(12, wx.MODERN, wx.NORMAL,
+            self.font = wx.Font(14, wx.MODERN, wx.NORMAL,
                                 wx.NORMAL, 0, "Arial")
             self.SetBackgroundColour(theme['Panels Colors']['Shell background'])
             self.SetFont(self.font)
@@ -64,6 +72,7 @@ class ShellPanel(wx.TextCtrl):
         """ Move the cursor on the previous character
         """
 
+        print("cursor : move key left.")  
         cursor = self.GetInsertionPoint()
         self.SetInsertionPoint(cursor - 1)
 
@@ -71,29 +80,31 @@ class ShellPanel(wx.TextCtrl):
         """ Move the cursor on the next character
         """
 
+        print("cursor : move key right.") 
         cursor = self.GetInsertionPoint()
         self.SetInsertionPoint(cursor + 1)
 
     def remove_char(self):
         """ Remove the previous character
         """
-        print ("hremove")
+        print ("remove previous char ")
         cursor = self.GetInsertionPoint()
         self.Remove(cursor - 1, cursor)
     
     def move_key_up(self):
         """ Move the cursor on the next character
         """
-        print ("upuouo")
+        print ("move key up.")
         
     def move_key_down(self):
         """ Move the cursor on the next character
         """
-        print ("down")
+        print ("move key down")
         
     def on_key_down(self, event):
-        print ("hhhhhhhhhhhhhhhhhhhhh")
+        print ("on key down")
         keycode = event.GetKeyCode()
+        print("key code : ", keycode) 
 
         if keycode == wx.WXK_RETURN:
             command = self.text_ctrl.GetValue()
@@ -119,3 +130,5 @@ class ShellPanel(wx.TextCtrl):
                     self.text_ctrl.SetValue(self.command_history[self.current_command_index])
 
         event.Skip()
+
+    

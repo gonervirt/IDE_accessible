@@ -12,6 +12,15 @@ from Panels.Device_tree import treeModel
 class ManageConnection():
     """
     Class with useful methods to manage Connection related with the frame
+    
+    this class contains folowing methods : 
+    * get_card_infos : to get information related to connected board (type, version, release, machine, etc) 
+    * upload_and_run : upload and run script from editor panel to connected device.
+    * upload : upload script from editor panel to connected device. 
+    * write_in_file : write file from the computer to the connected device 
+    * ConnectSerial : connect device to the computer via serial link 
+    * _check_extension_file : check file name extension 
+    
     """
 
     def __init__(self, frame):
@@ -32,6 +41,12 @@ class ManageConnection():
     def get_card_infos(self, msg_cmd):
         """Get the name, the version of the firmware and the type of the
          connected device
+         
+         this method returns :
+         * self.card (name of the connected board)
+         * self.nodename 
+         * self.version (micropython version and release date)
+         * self.machine (board type) 
 
         :param msg_cmd: Result of a command
         :type msg_cmd: string
@@ -55,9 +70,42 @@ class ManageConnection():
             self.version = list_res[3]
             self.machine = list_res[4]
         except Exception as e:
-            print("Error get infos device:", e)
+            print("Error get infos device: \n", e)
         if self.card == "pyboard":
             self.frame.time_to_send = 0.1
+
+    # FLB => add method to detect presence of micro SD card  
+    def detect_SD_card(self, nodename):
+        """Detects presence of a micro SD card on the device
+        
+           param : nodename of the connected device 
+           type : str example 'pyboard'
+        """
+        
+        self.nodename=nodename
+        
+        if self.nodename == 'pyboard': 
+            # import needed modules 
+            cmd = "import pyb" 
+            self.frame.exec_cmd(cmd) 
+            cmd = "sd = pyb.SDCard()" 
+            self.frame.exec_cmd(cmd)         
+            cmd = "sd.present()" 
+            res = self.frame.exec_cmd(cmd)         
+            print("SD card detected on ", self.nodename, " : " , res) 
+        else: 
+            # import needed modules 
+            cmd = "from machine import SDCard" 
+            self.frame.exec_cmd(cmd) 
+            cmd = "sd=sdcard()" 
+            self.frame.exec_cmd(cmd)         
+            cmd = "sd.present()" 
+            res = self.frame.exec_cmd(cmd)         
+            print("SD card detected : ", res) 
+        if res == True:
+            return True
+        else:
+            return False 
 
     def upload_and_run(self, filename):
         """Execute the file gived in params on the MicroPython card
@@ -158,6 +206,8 @@ def ConnectSerial(self):
     :rtype: boolean
     """
 
+    print("serial  manager - connexion.py") 
+    print(" ConnectSerial method ") 
     self.shell.Clear()
     self.serial.write('\x03'.encode())
 
@@ -167,9 +217,9 @@ def ConnectSerial(self):
         n = self.serial.inWaiting()
         if n > 0:
             startdata += (self.serial.read(n)).decode(encoding='utf-8', errors='ignore')
-            print("[%s]" % startdata)
+            print("start data : [%s]" % startdata)
             if startdata.find('>>> '):
-                print("OK")
+                print("start data : OK")
                 break
         time.sleep(0.1)
         endTime = time.time()
@@ -180,9 +230,12 @@ def ConnectSerial(self):
                 return False
             return False
     senddata = "import sys\r\n"
-    put_cmd(self, "import sys\r\n")
-    for i in senddata:
-        self.serial.write(i.encode())
+    # FLB => modification parametre et ajout du print
+    print("put_cmd : ", senddata) 
+    put_cmd(self, senddata)
+    # FLB => remove sending char by char 
+    # for i in senddata:
+    #     self.serial.write(i.encode())
     startdata = ""
     startTime = time.time()
     while True:
@@ -190,6 +243,10 @@ def ConnectSerial(self):
         if n > 0:
             startdata += (self.serial.read(n)).decode('utf-8', 'ignore')
             if startdata.find('>>> ') >= 0:
+                # FLB => ajout du prompt dans la fenetre shell 
+                # FLB => modify initial shell information
+                print("add >>> to shell console") 
+                self.shell.AppendText("Connected to device.") 
                 self.shell.AppendText(">>> ")
                 break
         time.sleep(0.1)
@@ -227,7 +284,7 @@ def _check_extension_file(filename, extension):
     :type filename: str
     :param extension: extensions to find
     :type extension: [type]
-    :return:
+    :return: finalname or None
     :rtype: [type]
     """
 

@@ -90,21 +90,50 @@ class ToolsMenu(wx.Menu):
             try:
                 frame.start_thread_serial()
                 frame.show_cmd = False
-                frame.exec_cmd("import os\r\n")
-                frame.exec_cmd("os.uname()\r\n")
+                # envoi commande import os
+                os_cmd = "import os\r\n"
+                print("tool menu.py ") 
+                print("Exec cmd : ", os_cmd) 
+                frame.exec_cmd(os_cmd)
+                
+                # FLB => envoi commande os.uname 
+                os_cmd = "os.uname()\r\n"
+                print("Tools_menu.py => OnPortSettings (ligne 100) ") 
+                print("Exec cmd : ", os_cmd) 
+                res_cmd = frame.exec_cmd(os_cmd)
+                print("Test sortie exec_cmd : ", res_cmd)
+                connected_board = res_cmd.split(",")[0].split("=")[1].replace("'","") 
+                micropy_version = res_cmd.split(",")[3].split("=")[1].replace("'","") 
+                machine_type = res_cmd.split(",")[4].split("=")[1].replace("'","").replace(")","") 
+                
+                print("Board connected : ", connected_board) 
+                print("Micropython version : ", micropy_version)
+                print("Board type : ", machine_type)
+                
+                # test retour de commande 
                 if frame.result.find("upgrade") >= 0:
                     frame.serial.close()
                     frame.shell.Clear()
                     frame.shell.WriteText("Device memory corrupted:Upgrade your device with F7")
                     return
+                # FLB => get_card_infos
+                print("Card info : ") 
                 frame.serial_manager.get_card_infos(frame.result)
+                # FLB => comment récupérer les infos avec la methode get_Card_info ?
+                # print("Board : ", frame.serial_manager.get_card_infos(frame.result).machine) 
+                
+                # update text in status bar 
                 frame.actualize_status_bar()
                 treeModel(frame)
                 my_speak(frame, "Device connected")
                 frame.show_cmd = True
                 wx.CallAfter(frame.shell.Clear)
+                # FLB => 
+                print("Tools_menu.py => OnPortSettings (ligne 120) ") 
+                print("put_cmd retour à la ligne r et n => pourquoi ??? ") 
                 put_cmd(frame, "\r\n")
             except Exception as e:
+                print("Connection Error")
                 print(e)
                 self.frame.speak_on = "Connection Error Retry"
                 wx.CallAfter(frame.shell.Clear)

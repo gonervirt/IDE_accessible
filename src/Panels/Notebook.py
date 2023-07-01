@@ -97,7 +97,7 @@ class NotebookPanel(fnb.FlatNotebook):
             self.SetActiveTabTextColour(theme['Active tab text'])
             self.SetNonActiveTabTextColour(theme['Active tab text'])
         except Exception as e:
-            print("Can't Customize Notebook: ", e)
+            print("Can't Customize Notebook from json file data : ", e)
 
     def set_focus_editor(self, evt):
         """ Set the focus on the current editor tab
@@ -108,7 +108,7 @@ class NotebookPanel(fnb.FlatNotebook):
             page = self.GetTabArea()
             page.SetFocus()
         except Exception as e:
-            print(e)
+            print("can'tERROR focus on current editor tab : ", e)
 
     def new_page(self, filename, path, text, on_card):
         """ Add the new tab and his infos on the notebook

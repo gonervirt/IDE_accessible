@@ -16,6 +16,8 @@ def put_cmd(frame, msg_cmd):
     :type msg_cmd: str
     """
 
+    # FLB => envoi de la commande de type str sur le port série 
+    # pas de retrun ??? 
     frame.serial.write(msg_cmd.encode('utf-8'))
     frame.serial.flush()
 
