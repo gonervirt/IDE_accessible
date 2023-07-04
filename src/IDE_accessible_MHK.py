@@ -2,8 +2,9 @@
     Main of the application wich contains the classes to init the app
 """
 
-__version__ = "v2.0" 
-__release_date__ = "2023-06-25" 
+# FLB => ajout version, release et authors
+__version__ = "v 2.0 beta" 
+__release_date__ = "2023-06-30" 
 __author__ = "My Human Kit in collaboration with Atelier partagé"
 
 import os
@@ -61,6 +62,9 @@ class MainWindow(wx.Frame):
         :param size: define dimensions of the window (width, height)
         :type size: tuple(int, int)
         """
+        # FLB => ajout methode super 
+        super().__init__()
+        
         wx.Frame.__init__(self, None, 1, title=name, size=size)
         dir_icon = os.path.dirname("./img/Icone.png")
         print("DIR icon : ", dir_icon) 
@@ -310,6 +314,10 @@ class MyApp(wx.App):
             --if False exit or error
             --if True the app works
         """
+
+        # FLB => ajout methode super 
+        # super().__init__()
+        
         wx.InitAllImageHandlers()
         # get screen siez
         window_factor = 0.75
@@ -323,7 +331,7 @@ class MyApp(wx.App):
         window_size=(width, height)
         
         # fenetre principale de l'application 
-        window = MainWindow("IDE Accessible MHK V 1.0", window_size)
+        window = MainWindow("IDE Accessible MHK " + __version__, window_size)
         self.SetTopWindow(window)
         window.Show()
         return True
