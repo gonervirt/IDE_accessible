@@ -18,10 +18,13 @@ class ShellPanel(wx.TextCtrl):
         """ Constructor method
          """
 
+<<<<<<< HEAD
         # FLB => ajout methode super()
         # question : ajout des 2 parametre de la classe wx.textCtrl (parent, frame) ?
         super().__init__() 
         
+=======
+>>>>>>> 8069a8818a46953119fd11593e692d9811f1f70a
         # create text console
         text_console = wx.TextCtrl.__init__(self, parent=parent,
                              style=wx.TE_MULTILINE |
