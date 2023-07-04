@@ -2,14 +2,9 @@
     Main of the application wich contains the classes to init the app
 """
 
-<<<<<<< HEAD
 # FLB => ajout version, release et authors
 __version__ = "v 2.0 beta" 
 __release_date__ = "2023-06-30" 
-=======
-__version__ = "v2.0" 
-__release_date__ = "2023-06-25" 
->>>>>>> 8069a8818a46953119fd11593e692d9811f1f70a
 __author__ = "My Human Kit in collaboration with Atelier partagé"
 
 import os
