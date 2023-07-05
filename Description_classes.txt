@@ -1,0 +1,22 @@
+Pour la description, à chaque fois, je mets le nom du fichier et ensuite, je fais des indentations pour les sous-appels.
+Par exemple, MainWindow.init appelle : Shortcuts, init_toolbar, init_top_menu, etc.
+Je n'ai pas écrit tous les détails, juste l'organisation de qui crée qui.
+
+IDE_Accessible_MHK.py 
+main()
+    MyApp()
+    MainWindow.__init__
+        MainWindows.__set_properties__
+            menus.init_top_menu
+                menus.TopMenu.__init__
+                    Crée tous les sous-menus (help, file, edit, tools...)
+            Serial_manager.firmware.FirmwareManager.__init__
+            Serial_manager.connexion.ManageConnection.__init__
+        all_panels.create_panels
+            Panels.Device.DeviceTree.__init__
+            Panels.Shell.ShellPanel.__init__
+            Panels.Notebook.NotebookPanel.__init__
+        Shortcuts.InitShortcuts
+            Initialise tous les schortcuts
+        menus.init_toolbar
+            menus.Toolbar.__init__

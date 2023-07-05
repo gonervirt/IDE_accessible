@@ -1,0 +1,14 @@
+ansicon==1.89.0
+comtypes==1.2.0
+console==0.9907
+ezenv==0.92
+jinxed==1.2.0
+numpy==1.24.3
+Pillow==9.5.0
+pyflakes==3.0.1
+pypiwin32==223
+pyserial==3.5
+pyttsx3==2.90
+pywin32==306
+six==1.16.0
+wxPython==4.2.1

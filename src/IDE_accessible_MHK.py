@@ -62,13 +62,11 @@ class MainWindow(wx.Frame):
         :param size: define dimensions of the window (width, height)
         :type size: tuple(int, int)
         """
-        # FLB => ajout methode super 
-        super().__init__()
-        
+        # initialisation de la classe parent wx.frame 
         wx.Frame.__init__(self, None, 1, title=name, size=size)
-        dir_icon = os.path.dirname("./img/Icone.png")
-        print("DIR icon : ", dir_icon) 
-        self.SetIcon(wx.Icon("./img/Icone.png"))
+        dir_icon = os.path.dirname("../img/Icone.png")
+        print("DIR icon ok : ", dir_icon) 
+        self.SetIcon(wx.Icon("../img/Icone.png"))
         
         print("Creation de la fenetre de l'application au centre de l'ecran") 
         #cree la fenetre au centre de l'ecran
@@ -315,9 +313,6 @@ class MyApp(wx.App):
             --if True the app works
         """
 
-        # FLB => ajout methode super 
-        # super().__init__()
-        
         wx.InitAllImageHandlers()
         # get screen siez
         window_factor = 0.75
@@ -331,11 +326,10 @@ class MyApp(wx.App):
         window_size=(width, height)
         
         # fenetre principale de l'application 
-<<<<<<< HEAD
         window = MainWindow("IDE Accessible MHK " + __version__, window_size)
-=======
+
         window = MainWindow("IDE Accessible MHK V 1.0", window_size)
->>>>>>> 8069a8818a46953119fd11593e692d9811f1f70a
+
         self.SetTopWindow(window)
         window.Show()
         return True

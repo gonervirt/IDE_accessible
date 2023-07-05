@@ -160,17 +160,17 @@ class ToolBar(wx.ToolBar):
         Fill the objet created with tools buttons
         """
 
-        self.AddTool(wx.ID_NEW, '', load_img('./img/newfile.png'), shortHelp="New")
-        self.AddTool(wx.ID_OPEN, '', load_img('./img/fileopen.png'), shortHelp="Open")
-        self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'), shortHelp="Save")
-        self.AddTool(wx.ID_EXECUTE, '', load_img('./img/downloadandrun.png'),
+        self.AddTool(wx.ID_NEW, '', load_img('../img/newfile.png'), shortHelp="New")
+        self.AddTool(wx.ID_OPEN, '', load_img('../img/fileopen.png'), shortHelp="Open")
+        self.AddTool(wx.ID_SAVE, '', load_img('../img/save.png'), shortHelp="Save")
+        self.AddTool(wx.ID_EXECUTE, '', load_img('../img/downloadandrun.png'),
                      shortHelp="Run")
-        self.AddTool(wx.ID_STOP, '', load_img('./img/stop.png'), shortHelp="Stop")
-        self.AddTool(wx.ID_UNDO, '', load_img('./img/undo.png'), shortHelp="Undo")
-        self.AddTool(wx.ID_REDO, '', load_img('./img/redo.png'), shortHelp="Redo")
-        self.AddTool(wx.ID_SYNTAX_CHECK, '', load_img('./img/syntaxCheck.png'),
+        self.AddTool(wx.ID_STOP, '', load_img('../img/stop.png'), shortHelp="Stop")
+        self.AddTool(wx.ID_UNDO, '', load_img('../img/undo.png'), shortHelp="Undo")
+        self.AddTool(wx.ID_REDO, '', load_img('../img/redo.png'), shortHelp="Redo")
+        self.AddTool(wx.ID_SYNTAX_CHECK, '', load_img('../img/syntaxCheck.png'),
                      shortHelp="Check syntax")
-        self.AddTool(wx.ID_CLEAR, '', load_img('./img/clear.png'), shortHelp="Clear")
+        self.AddTool(wx.ID_CLEAR, '', load_img('../img/clear.png'), shortHelp="Clear")
 
     def OnClear(self, event):
         """Clear the shell panel
