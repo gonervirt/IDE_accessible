@@ -246,7 +246,9 @@ def ConnectSerial(self):
                 # FLB => ajout du prompt dans la fenetre shell 
                 # FLB => modify initial shell information
                 print("add >>> to shell console") 
-                self.shell.AppendText("Connected to device.") 
+                # FLB => ajout texte "connectect dans la console de shell
+                #   MARCHE PAS et POURQUOI ????
+                self.shell.AppendText("Connected to device. \r\n") 
                 self.shell.AppendText(">>> ")
                 break
         time.sleep(0.1)

@@ -76,7 +76,7 @@ class DeviceTree(wx.TreeCtrl):
          """
 
         try:
-            file = open("./customize.json")
+            file = open("../customize.json")
             path = json.load(file)
             path = path['Workspace Path']
             if path != "":
@@ -123,7 +123,7 @@ class DeviceTree(wx.TreeCtrl):
          """
 
         try:
-            file = open("./customize.json")
+            file = open("../customize.json")
             theme = json.load(file)
             theme = theme[self.theme_choice]
             file.close()
@@ -213,7 +213,7 @@ class DeviceTree(wx.TreeCtrl):
 
         if self.path.find("Workspace") >= 0:
             self.path = self.path.replace("Workspace/", '\\')
-            with open("./customize.json", "r") as file:
+            with open("../customize.json", "r") as file:
                 tab = json.load(file)
             filehandle = open(tab['Workspace Path'] + self.path, 'r')
             res = filehandle.read()
@@ -293,9 +293,9 @@ class DeviceTree(wx.TreeCtrl):
             self.DeleteChildren(self.workspace)
             self.fill_section(self.workspace, path)
             try:
-                with open("./customize.json", "r") as file:
+                with open("../customize.json", "r") as file:
                     tab = json.load(file)
-                with open("./customize.json", "w") as file:
+                with open("../customize.json", "w") as file:
                     tab['Workspace Path'] = path
                     file.write(json.dumps(tab, indent=4))
             except Exception as e:

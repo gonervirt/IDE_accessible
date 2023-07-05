@@ -53,7 +53,7 @@ class NotebookPanel(fnb.FlatNotebook):
         w, h = self.GetSize()
         try:
             self.dc = wx.PaintDC(self)
-            file = open('./customize.json')
+            file = open('../customize.json')
             theme = json.load(file)
             theme = theme[self.theme_choice]
             file.close()
@@ -88,7 +88,7 @@ class NotebookPanel(fnb.FlatNotebook):
          """
 
         try:
-            file = open("./customize.json")
+            file = open("../customize.json")
             theme = json.load(file)
             file.close()
             theme = theme['Dark Theme']['Panels Colors']

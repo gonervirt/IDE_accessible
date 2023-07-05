@@ -48,7 +48,7 @@ class ShellPanel(wx.TextCtrl):
         """
 
         try:
-            file = open("./customize.json")
+            file = open("../customize.json")
             theme = json.load(file)
             file.close()
             theme = theme[theme_choice]

@@ -171,7 +171,7 @@ class MainWindow(wx.Frame):
         If the key is in the ASCII range, write it to the
         serial port of the micropython board. 
         
-        this method manages key pressed in text control console
+        this method manages key pressed in text control console (micropython interaction with connected device)
            * Newline handling is also done here.
            * left arrow
            * right arrow

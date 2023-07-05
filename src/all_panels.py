@@ -41,5 +41,15 @@ def create_panels(frame):
     frame.splitter_v.SetMinimumPaneSize(20)
     # Add status bar 
     frame.statusbar = frame.CreateStatusBar(2, style=wx.STB_ELLIPSIZE_MIDDLE)
-    frame.statusbar.SetBackgroundColour("Grey")
+    # frame.statusbar.SetBackgroundColour("Grey")
+    
+    # FLB => modification affichage statusbar
+    # Definition les styles de police et de couleur pour la barre d'état
+    # self.statusbar = self.GetStatusBar()
+    frame.statusbar.SetBackgroundColour(wx.Colour(0, 0, 0))  # Noir pour la Couleur de fond
+    frame.statusbar.SetForegroundColour(wx.Colour(255, 255, 255))  # blanc Couleur du texte
+    status_font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL)  # Police de caractères
+    frame.statusbar.SetFont(status_font)
+
+    
     frame.statusbar.SetStatusText("Status: Not Connected", 1)
