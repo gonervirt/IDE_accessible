@@ -6,6 +6,8 @@ import serial
 import threading
 import pyttsx3
 import sys
+#seb
+from History import History
 
 from Shortcuts import InitShortcuts
 from Serial_manager.firmware import FirmwareManager
@@ -42,6 +44,8 @@ class MainWindow(wx.Frame):
         init_toolbar(self)
         InitShortcuts(self)
         self.__attach_events()
+        #seb
+        self.history = History()
 
     def __set_properties__(self):
         """ Set attributs of the class instancied
@@ -123,8 +127,12 @@ class MainWindow(wx.Frame):
         if code < 256:
             code = evt.GetKeyCode()
         if code == 13:  # is it a newline?
+            commande=self.history.enter()
+            self.serial.write(f'{commande}')
             self.serial.write(b'\n')
             self.on_key = False   # send LF
+            self.history.enter()
+
         if code == 314:
             self.keypressmsg = "\x1b\x5b\x44"
             self.serial.write(b'\x1b\x5b\x44')
@@ -133,14 +141,45 @@ class MainWindow(wx.Frame):
             self.keypressmsg = "\x1b\x5b\x43"
             self.serial.write(b'\x1b\x5b\x43')
             return
+        #seb
+        if code == wx.WXK_DOWN:
+            self.serial.write(self.history.down(self))
+            return
+        
+        if code == wx.WXK_UP:
+            self.serial.write(self.history.up(self))
+            return
+        #seb
+        if code == wx.WXK_F1:
+            #self.keypressmsg = "\x1b\x5b\x43"
+            #self.serial.write(b'import os')
+            #self.serial.write(b'\n')
+            #self.serial.write(b'os.uname()\n')
+            #self.serial.write(b'\r\n')
+            #self.serial.flush()
+            print (self.history.history)
+            return
+        """if code == wx.WXK_ESC:
+            #self.keypressmsg = "\x1b\x5b\x43"
+            self.serial.write(b'import os')
+            self.serial.write(b'\n')
+            self.serial.write(b'os.uname()')
+            self.serial.write(b'\n')
+            return
+        """
+        #seb
         if code == 8:
+            print ("remove")
             self.keypressmsg = "\x08"
             self.serial.write(b'\x08')
+            self.history.removechar()
             return
         else:
             self.keypressmsg = "else"
         char = chr(code)
         self.serial.write(char.encode('UTF-8', 'ignore'))
+        print(f"---> char = {char}   {ord(char)}")
+        self.history.char(code)
         self.serial.flush()
 
     def thread_listen_port(self):
